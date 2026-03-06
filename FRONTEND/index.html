@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Horários</title>
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body>
+    <!-- TELA DE BOAS-VINDAS / CONFIGURAÇÃO INICIAL -->
+    <div id="welcome-screen">
+        <div class="welcome-box">
+            <h2>Bem-vindo ao Gerador de Horários</h2>
+            <p>Preencha os dados da sua instituição para começar.</p>
+            <form id="setup-form">
+                <div class="form-group">
+                    <label for="school-name">Nome da Escola</label>
+                    <input type="text" id="school-name" placeholder="Ex: Colégio Saber" required>
+                </div>
+                <div class="form-group">
+                    <label for="responsible-name">Responsável pelo Horário</label>
+                    <input type="text" id="responsible-name" placeholder="Ex: Coordenadora Maria" required>
+                </div>
+                <div class="form-group-inline">
+                    <div class="form-group">
+                        <label for="school-year">Ano Letivo</label>
+                        <input type="number" id="school-year" placeholder="2024" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="school-shift">Turno</label>
+                        <input type="text" id="school-shift" placeholder="Matutino" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-start">Começar a Criar Horários</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- V-1: TELA PRINCIPAL DO GERADOR DE HORÁRIOS -->
+    <div id="scheduler-view" class="view-hidden">
+        <header>
+            <h1>Gerador de Horários</h1>
+            <div class="header-actions">
+                <button id="manage-btn">Gerenciar Cadastros</button>
+                <button id="save-all-btn">Salvar Tudo</button>
+                <button onclick="exportarExcel()">📊 Download Excel</button>
+                <button onclick="exportarPDF()">📄 Download PDF</button>
+                <button onclick="window.print()">🖨️ Imprimir</button>
+            </div>
+        </header>
+
+        <div class="app-container">
+            <aside>
+                <h2>Configurações</h2>
+                <div class="control-group">
+                    <label for="class-selector">Turma Ativa</label>
+                    <select id="class-selector"></select>
+                </div>
+
+                <!-- NOVO: Painel de Status Global -->
+                <div id="global-status-panel">
+                    <h2>Status das Turmas</h2>
+                    <div id="global-status-list"></div>
+                </div>
+
+                <!-- PAINEL DE PROFESSORES E MATRIZ -->
+                <h2 style="margin-top: 1.5rem;">Professores</h2>
+                <div id="professor-list">
+                    <!-- Lista de professores será gerada aqui -->
+                </div>
+                <button class="btn-primary" id="add-prof-btn">Adicionar Professor</button>
+
+                <h2 style="margin-top: 1.5rem;">Resumo da Matriz (Turma Ativa)</h2>
+                <div id="summary-panel">
+                    <!-- O JavaScript vai preencher isso aqui -->
+                </div>
+            </aside>
+
+            <main>
+                <div id="timetable" class="timetable">
+                    <!-- A grade será gerada dinamicamente pelo script.js -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- V-2: TELA DE GERENCIAMENTO DE CADASTROS (NOVA) -->
+    <div id="management-view" class="view-hidden">
+        <header>
+            <h1>Gerenciar Cadastros</h1>
+            <div class="header-actions">
+                <button id="back-to-scheduler-btn">Voltar para o Horário</button>
+            </div>
+        </header>
+        <div class="management-container">
+            <section id="combined-management-section">
+                <div class="management-header">
+                    <h2>Professores &amp; Matérias</h2>
+                    <button id="add-prof-supr-btn" class="btn-primary">Adicionar Professor</button>
+                    <button id="add-subj-supr-btn" class="btn-primary" style="margin-left:8px;">Adicionar Matéria</button>
+                </div>
+                <div id="combined-management-table"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Bibliotecas para download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>

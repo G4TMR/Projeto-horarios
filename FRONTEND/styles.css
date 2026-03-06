@@ -1,0 +1,566 @@
+:root {
+    /* Paleta de Cores "Do Balacobaco" - Profissional e Moderna */
+    --primary-color: #2c3e50;    /* Azul Petróleo Escuro */
+    --secondary-color: #34495e;  /* Azul Acinzentado */
+    --accent-color: #3498db;     /* Azul Vibrante para destaques */
+    --success-color: #27ae60;    /* Verde para ações positivas */
+    --danger-color: #c0392b;     /* Vermelho para erros/remover */
+    --bg-light: #f4f7f6;         /* Fundo cinza bem claro */
+    --text-dark: #2c3e50;
+    --text-light: #ecf0f1;
+    --border-color: #bdc3c7;
+    --shadow-card: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-hover: 0 8px 12px rgba(0,0,0,0.15);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    /* overflow deixado normal; será controlado pela classe .setup-mode */
+}
+
+.view-hidden {
+    display: none !important;
+}
+
+/* --- CABEÇALHO --- */
+header {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-card);
+    z-index: 10;
+}
+
+header h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.header-actions button {
+    background-color: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 10px;
+}
+
+.header-actions button:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+/* --- LAYOUT PRINCIPAL --- */
+.app-container {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 60px);
+}
+
+/* --- BARRA LATERAL (CONTROLES) --- */
+aside {
+    width: 320px;
+    background-color: white;
+    border-right: 1px solid var(--border-color);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+}
+
+aside h2 {
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.control-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
+.control-group input, 
+.control-group select {
+    padding: 0.6rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.btn-generate {
+    background-color: var(--success-color);
+    margin-top: auto; /* Empurra para o final */
+    font-size: 1.1rem;
+    padding: 1rem;
+}
+
+.btn-generate:hover {
+    background-color: #219150;
+}
+
+/* --- ÁREA DA GRADE (TIMETABLE) --- */
+main {
+    flex: 1;
+    padding: 2rem;
+    overflow: auto;
+    background-color: #eef2f3;
+}
+
+/* O Grid Mágico */
+.timetable {
+    display: grid;
+    /* Coluna da hora (80px) + 5 dias da semana iguais */
+    grid-template-columns: 80px repeat(5, 1fr); 
+    gap: 1px; /* Linhas finas estilo Excel */
+    background-color: #bdc3c7; /* Cor das linhas da grade */
+    border: 1px solid #bdc3c7;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+.timetable-header {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.time-slot {
+    background-color: #ecf0f1;
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    padding: 0.5rem;
+}
+
+.class-card {
+    background-color: #ffffff;
+    min-height: 100px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.class-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    z-index: 2;
+}
+
+.class-card[draggable="true"] {
+    cursor: grab;
+}
+
+.class-card[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+.subject-name {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.prof-name {
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* --- PAINEL DE RESUMO --- */
+#summary-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border-left: 4px solid var(--border-color);
+}
+
+.summary-item.completed {
+    border-left-color: var(--success-color);
+    text-decoration: line-through;
+}
+
+.summary-item span:last-child {
+    font-weight: bold;
+    background-color: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* --- ESTADOS DAS CÉLULAS DA GRADE --- */
+.class-card.vazio {
+    background-color: #ffffff;
+    /* Sem borda tracejada, visual limpo */
+}
+
+.class-card.vazio:hover {
+    background-color: #e9ecef;
+    border-color: var(--accent-color);
+}
+
+.class-card.conflito {
+    background-color: #fbe9e7; /* Fundo vermelho claro */
+    border: 2px solid var(--danger-color);
+    animation: pulse-red 1.5s infinite;
+}
+
+.class-card.conflito .subject-name,
+.class-card.conflito .prof-name {
+    color: var(--danger-color);
+}
+
+/* ADAPTADO: Bloqueio visual forte para slots inexistentes */
+.slot-disabled {
+    background-color: #dbe0e2;
+    min-height: 100px;
+    background-image: repeating-linear-gradient(
+        45deg,
+        #c8ced0, #c8ced0 5px,
+        #dbe0e2 5px, #dbe0e2 10px
+    );
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(192, 57, 43, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); }
+}
+
+/* --- LISTA DE PROFESSORES --- */
+#professor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.prof-item {
+    background-color: #f8f9fa;
+    padding: 0.6rem;
+    border-radius: 4px;
+    border-left: 4px solid var(--accent-color);
+    cursor: grab;
+    font-weight: 500;
+}
+
+.prof-item:active {
+    cursor: grabbing;
+    background-color: #e9ecef;
+}
+
+.prof-item[draggable="true"] {
+    user-select: none;
+}
+
+/* --- PAINEL DE STATUS GLOBAL --- */
+#global-status-panel {
+    margin-top: 1.5rem;
+}
+
+#global-status-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.status-tag.completed {
+    border-color: var(--success-color);
+    background-color: #e9f7ef;
+    color: var(--success-color);
+}
+
+.status-tag {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    background-color: var(--border-color);
+    color: var(--secondary-color);
+    border: 2px solid transparent;
+}
+
+/* --- TELA DE BOAS-VINDAS (NOVO) --- */
+#welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: opacity 0.5s ease-out, visibility 0.5s;
+    opacity: 1;
+    visibility: visible;
+}
+
+.welcome-box {
+    background: white;
+    padding: 2.5rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: float-in 0.6s ease-out 0.2s forwards;
+}
+
+@keyframes float-in {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.welcome-box h2 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+.welcome-box p {
+    color: var(--secondary-color);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+#setup-form .form-group,
+#setup-form .form-group-inline {
+    margin-bottom: 1.25rem;
+    text-align: left;
+}
+
+.form-group-inline {
+    display: flex;
+    gap: 1rem;
+}
+.form-group-inline .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+#setup-form input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#setup-form input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.btn-start {
+    background: var(--success-color);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-start:hover {
+    background-color: #219150;
+    transform: translateY(-2px);
+}
+
+/* --- TELA DE GERENCIAMENTO (NOVA) --- */
+#management-view {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.management-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #eef2f3;
+}
+
+.management-container section {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow-card);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.management-header h2 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.management-table {
+    width: 100%;
+    border-collapse: collapse;
+    flex: 1;
+    display: block;
+    overflow-y: auto;
+}
+
+.management-table thead, .management-table tbody, .management-table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.management-table th, .management-table td {
+    padding: 0.8rem;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.management-table th {
+    font-weight: 600;
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+.management-table td input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.management-table td input[type="text"]:hover {
+    border-color: var(--border-color);
+}
+
+.management-table td input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.col-id { width: 8%; }
+.col-nome { width: 35%; }
+.col-apelido { width: 22%; }
+.col-materia { width: 35%; }
+.col-abreviacao { width: 30%; }
+.col-actions { width: 15%; text-align: right !important; }
+
+
+/* --- ESTILOS DE IMPRESSÃO --- */
+@media print {
+    aside, header, .header-actions {
+        display: none !important;
+    }
+
+    .app-container {
+        height: auto;
+        display: block;
+    }
+
+    main {
+        padding: 0;
+        background: white;
+        overflow: visible;
+    }
+
+    .timetable {
+        box-shadow: none;
+        border: 2px solid black;
+        gap: 0; /* Bordas sólidas na impressão */
+    }
+
+    .timetable-header, .time-slot, .class-card {
+        border: 1px solid black;
+        background-color: white !important; /* Economizar tinta */
+        color: black !important;
+    }
+}
